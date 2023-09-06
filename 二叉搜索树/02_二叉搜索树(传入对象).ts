@@ -1,4 +1,4 @@
-import Node from "../type/Node";
+// import Node from "../type/Node";
 import { btPrint,PrintableNode } from 'hy-algokit'
 
 /**
@@ -9,7 +9,15 @@ import { btPrint,PrintableNode } from 'hy-algokit'
  * 5.删除
  */
 
-class TreeNode<T> extends Node<T> { 
+
+class Node<T> { 
+    data: T
+    constructor(value: T) { 
+        this.data = value
+     }
+ }
+
+class TreeNode<T> extends Node<T> implements PrintableNode { 
     left: TreeNode<T>|null = null
     right: TreeNode<T> | null = null
     parent: TreeNode<T> | null = null
@@ -20,6 +28,11 @@ class TreeNode<T> extends Node<T> {
     
     get isRight(): boolean { 
         return this.parent?.right === this
+    }
+    
+    get value() { 
+        const data = (this.data as Product)
+        return `${data.name}-${data.price}`
      }
 }
  
@@ -46,7 +59,7 @@ class BSTree<T> {
 
 
     insertNode(node: TreeNode<T>, newNode: TreeNode<T>) { 
-        if (newNode.value < node.value) {
+        if (newNode.data < node.data) {
             if (node.left === null) {
                 node.left = newNode
             } else {
@@ -86,7 +99,7 @@ class BSTree<T> {
         
         while (current || stack.length > 0) { 
             while (current) { 
-                console.log(current.value);
+                console.log(current.data);
                 stack.push(current)
                 current = current.left
             }
@@ -122,7 +135,7 @@ class BSTree<T> {
             }
 
             current = stack.pop() ?? null
-            console.log(current?.value);
+            console.log(current?.data);
             current = current?.right ?? null
             
          }
@@ -161,7 +174,7 @@ class BSTree<T> {
             current = stack[stack.length - 1]
             
             if (current.right === null || current.right === lastVisitedNode) {
-                console.log(current.value);
+                console.log(current.data);
                 lastVisitedNode = current
                 stack.pop()
                 current = null
@@ -182,7 +195,7 @@ class BSTree<T> {
 
         while (queue.length) { 
             const node = queue.shift()
-            console.log(node!.value);
+            console.log(node!.data);
             if(node?.left) queue.push(node.left)
             if(node?.right) queue.push(node.right)
 
@@ -196,7 +209,7 @@ class BSTree<T> {
         while (current && current.left) { 
             current = current.left
         }
-        return current?.value ?? null
+        return current?.data ?? null
     }
     
     // 获取最大值
@@ -206,7 +219,7 @@ class BSTree<T> {
             current = current.right
         }
         
-        return current?.value ?? null
+        return current?.data ?? null
      }
 
     // 搜索节点
@@ -221,12 +234,12 @@ class BSTree<T> {
         
         while (current) {
 
-            if (current.value === value) {
+            if (current.data === value) {
                 return current
             }
 
             parent = current
-            if (value < current.value) {
+            if (value < current.data) {
                 current = current.left!
             } else { 
                 current = current.right!
@@ -322,17 +335,22 @@ class Product {
 }
  
 
-const p1 = new Product('苹果', 100)
-const p2 = new Product('华为', 120)
-const p3 = new Product('小米', 80)
-const p4 = new Product('vivo',90)
+
 
 const bst = new BSTree<Product>()
+
+
+const p1 = new Product('apple', 100)
+const p2 = new Product('huawei', 120)
+const p3 = new Product('xiaomi', 80)
+const p4 = new Product('vivo', 70)
+const p5 = new Product('oppo',90)
 
 bst.insert(p1)
 bst.insert(p2)
 bst.insert(p3)
 bst.insert(p4)
+bst.insert(p5)
 bst.print()
 
 // const bst = new BSTree<number>()
