@@ -25,21 +25,31 @@ export class TreeNode<T> extends Node<T> {
  
 
 class BSTree<T> { 
-    private root: TreeNode<T> | null = null
+    protected root: TreeNode<T> | null = null
     
     print() { 
         btPrint(this.root)
+    }
+    
+    createNode(value: T): TreeNode<T> { 
+        const newNode = new TreeNode(value)
+        return newNode
      }
 
+    checkBalanced(node:TreeNode<T>,isAdd=true) { }
+    
     // 插入节点
     insert(value: T) { 
-        const newNode = new TreeNode<T>(value)
+        const newNode = this.createNode(value)
 
         if (!this.root) {
             this.root = newNode
         } else { 
             this.insertNode(this.root,newNode)
-         }
+        }
+        
+        // 插入后，调整树
+        this.checkBalanced(newNode)
 
     }
 
@@ -49,6 +59,7 @@ class BSTree<T> {
         if (newNode.value < node.value) {
             if (node.left === null) {
                 node.left = newNode
+                newNode.parent = node
             } else {
                 this.insertNode(node.left, newNode)
             }
@@ -56,6 +67,7 @@ class BSTree<T> {
 
             if (node.right === null) {
                 node.right = newNode
+                newNode.parent = node
             } else {
                 this.insertNode(node.right,newNode)
              }
@@ -257,13 +269,17 @@ class BSTree<T> {
         }
         
         // 如果删除节点的后继节点不是删除节点的右孩子
-        if (successor !== deleteNode?.right) { 
+        if (successor !== deleteNode?.right) {
             successor!.parent!.left = successor!.right
-            successor!.right = deleteNode!.right
-        }
-        successor!.left = deleteNode!.left
-        
-
+            if (successor?.right) { 
+                successor.right.parent = successor.parent
+             }
+        } else { 
+            deleteNode.right = successor?.right ?? null
+            if (successor?.right) { 
+                successor.right.parent = deleteNode
+             }
+         }
 
         return successor
      }
@@ -272,9 +288,11 @@ class BSTree<T> {
     delete(value: T): boolean { 
         
         let current = this.getSearchNode(value)
+        
         let replaceNode: TreeNode<T> | null = null
         
         if (!current) return false
+        let delNode = current
         
         // 删除叶子节点
         if (current.left === null && current.right === null) {
@@ -293,7 +311,10 @@ class BSTree<T> {
 
         // 删除有双节点的节点
         else { 
-            replaceNode = this.getSuccessor(current)
+            let successor = this.getSuccessor(current)!
+            current.value = successor!.value
+            this.checkBalanced(successor,false)
+            return true
         }
         
         if (current === this.root) {
@@ -305,6 +326,13 @@ class BSTree<T> {
                 current!.parent!.right = replaceNode
             }
         }
+
+        // AVL删除中parent的处理
+        if (replaceNode && current.parent) { 
+            replaceNode.parent = current.parent
+        }
+        
+        this.checkBalanced(delNode,false)
         
         return true
     } 

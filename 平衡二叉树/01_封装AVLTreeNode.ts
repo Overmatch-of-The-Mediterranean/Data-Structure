@@ -67,7 +67,9 @@ class AVLTreeNode<T> extends TreeNode<T> {
             pivot.parent.left = pivot
         } else if (isRight) { 
             pivot.parent.right = pivot
-         }
+        }
+        
+        return pivot
      }
 
     // 左旋转
@@ -96,7 +98,9 @@ class AVLTreeNode<T> extends TreeNode<T> {
             pivot.parent.left = pivot
         } else if (isRight) { 
             pivot.parent.right = pivot
-         }
+        }
+        
+        return pivot
     }
 }
  
@@ -126,25 +130,28 @@ class AVLTreeNode<T> extends TreeNode<T> {
 
 
 // 右
-const av1Node1 = new AVLTreeNode(5)
-av1Node1.right = new AVLTreeNode(8)
-av1Node1.right.parent = av1Node1 
-av1Node1.right.right = new AVLTreeNode(10)
-av1Node1.right.right.parent = av1Node1.right
+// const av1Node1 = new AVLTreeNode(5)
+// av1Node1.right = new AVLTreeNode(8)
+// av1Node1.right.parent = av1Node1 
+// av1Node1.right.right = new AVLTreeNode(10)
+// av1Node1.right.right.parent = av1Node1.right
 
-console.log(av1Node1.getHeight());
-console.log(av1Node1.right.getHeight());
-console.log(av1Node1.right.right.getHeight());
-console.log(av1Node1.isBalanced);
-console.log(av1Node1.right.isBalanced);
+// console.log(av1Node1.getHeight());
+// console.log(av1Node1.right.getHeight());
+// console.log(av1Node1.right.right.getHeight());
+// console.log(av1Node1.isBalanced);
+// console.log(av1Node1.right.isBalanced);
 
 
-const parent = new AVLTreeNode(12)
-parent.right = av1Node1
+// const parent = new AVLTreeNode(12)
+// parent.right = av1Node1
 
-av1Node1.parent = parent
+// av1Node1.parent = parent
 
-btPrint(parent)
+// btPrint(parent)
 
-av1Node1.leftRotation()
-btPrint(parent)
+// av1Node1.leftRotation()
+// btPrint(parent)
+
+
+export default AVLTreeNode
